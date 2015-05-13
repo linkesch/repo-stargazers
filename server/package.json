@@ -1,0 +1,15 @@
+{
+  "name": "who-starred-repo",
+  "version": "0.0.1",
+  "description": "List users who starred a GitHub repo ordered by their importance",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Pavel Linkesch",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^1.1.0",
+    "restify": "^3.0.2"
+  }
+}
