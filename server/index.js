@@ -78,7 +78,7 @@ server.get('/get/:owner/:repo', function (req, res, next) {
 						return;
 					}
 
-					results[user.login].avatar = user.avatar_url;
+					results[user.login.toLowerCase()].avatar = user.avatar_url;
 
 					count++;
 
