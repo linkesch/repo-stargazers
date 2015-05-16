@@ -2,6 +2,8 @@ require('dotenv').load();
 
 var restify = require('restify');
 var server = restify.createServer();
+server.use(restify.CORS());
+
 var google = require('googleapis');
 var jwtClient = new google.auth.JWT(
   process.env.GOOGLE_CLIENT_ID,
@@ -9,13 +11,15 @@ var jwtClient = new google.auth.JWT(
   null,
   ['https://www.googleapis.com/auth/bigquery']);
 
+var client = restify.createJsonClient('https://api.github.com');
+var auth = '?client_id='+ process.env.GITHUB_CLIENT_ID +'&client_secret='+ process.env.GITHUB_CLIENT_SECRET;
+
 var respond = function (data, res, next) {
 	res.contentType = 'json';
     res.send(data);
     next();
 };
 
-server.use(restify.CORS());
 server.get('/get/:owner/:repo', function (req, res, next) {
 	jwtClient.authorize(function (err, tokens) {
 		if (err) {
@@ -49,17 +53,32 @@ server.get('/get/:owner/:repo', function (req, res, next) {
 				return;
 			}
 
-			var results = [];
+			var results = {};
+			var count = 0;
 			for (var i = 0; i < response.rows.length; i++) {
 				var row = response.rows[i];
-				results.push({
-					name: row.f[0].v,
-					stars: row.f[1].v,
-					avatar: avatar
+				var name = row.f[0].v;
+
+				results[name] = {
+					name: name,
+					stars: row.f[1].v
+				};
+
+				client.get('/users/'+ name + auth, function (err, req2, res2, user) {
+					if (err) {
+						respond(err, res, next);
+						return;
+					}
+
+					results[user.login].avatar = user.avatar_url;
+
+					count++;
+
+					if (count === response.rows.length) {
+						respond(results, res, next);
+					}
 				});
 			}
-
-			respond(results, res, next);
 		});
 	});
 });
