@@ -7,8 +7,8 @@ server.use(restify.CORS());
 var google = require('googleapis');
 var jwtClient = new google.auth.JWT(
   process.env.GOOGLE_CLIENT_ID,
-  'key.pem',
   null,
+  process.env.GOOGLE_CERT,
   ['https://www.googleapis.com/auth/bigquery']);
 
 var client = restify.createJsonClient('https://api.github.com');
@@ -91,6 +91,6 @@ server.get('/get/:owner/:repo', function (req, res, next) {
 	});
 });
 
-server.listen(80, function() {
+server.listen(process.env.PORT, function() {
     console.log('%s listening at %s', server.name, server.url);
 });
