@@ -15,6 +15,7 @@ var respond = function (data, res, next) {
     next();
 };
 
+server.use(restify.CORS());
 server.get('/get/:owner/:repo', function (req, res, next) {
 	jwtClient.authorize(function (err, tokens) {
 		if (err) {
@@ -39,7 +40,8 @@ server.get('/get/:owner/:repo', function (req, res, next) {
 					  'u.type="WatchEvent" '+
 					  'AND u.repository_owner = "'+ req.params.owner +'" '+
 					  'AND u.repository_name = "'+ req.params.repo +'" '+
-					'ORDER BY d.stars DESC'
+					'ORDER BY d.stars DESC '+
+					'LIMIT 10'
 			}
 		}, function (err, response) {
 			if (err) {
@@ -47,10 +49,14 @@ server.get('/get/:owner/:repo', function (req, res, next) {
 				return;
 			}
 
-			var results = {};
+			var results = [];
 			for (var i = 0; i < response.rows.length; i++) {
 				var row = response.rows[i];
-				results[row.f[0].v] = row.f[1].v;
+				results.push({
+					name: row.f[0].v,
+					stars: row.f[1].v,
+					avatar: avatar
+				});
 			}
 
 			respond(results, res, next);
