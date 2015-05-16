@@ -71,13 +71,13 @@ server.get('/get/:owner/:repo', function (req, res, next) {
 					name: name,
 					stars: row.f[1].v
 				};
-
+				console.log(results);
 				client.get('/users/'+ name + auth, function (err, req2, res2, user) {
 					if (err) {
 						respond(err, res, next);
 						return;
 					}
-
+					console.log(user.login.toLowerCase());
 					results[user.login.toLowerCase()].avatar = user.avatar_url;
 
 					count++;
