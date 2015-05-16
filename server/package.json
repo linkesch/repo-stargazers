@@ -1,5 +1,5 @@
 {
-  "name": "who-starred-repo",
+  "name": "repo-stargazers",
   "version": "0.0.1",
   "description": "List users who starred a GitHub repo ordered by their importance",
   "main": "index.js",
