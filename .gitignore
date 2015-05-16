@@ -1,2 +1,4 @@
 .env
 node_modules
+key.p12
+key.pem
