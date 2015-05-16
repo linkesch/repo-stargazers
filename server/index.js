@@ -53,6 +53,14 @@ server.get('/get/:owner/:repo', function (req, res, next) {
 				return;
 			}
 
+			if (!response.rows) {
+				respond({
+					code: 'error',
+					message: 'This repo was not found, or it has no stars. Please, try another one.'
+				}, res, next);
+				return;
+			}
+
 			var results = {};
 			var count = 0;
 			for (var i = 0; i < response.rows.length; i++) {
