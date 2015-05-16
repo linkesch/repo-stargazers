@@ -11,7 +11,7 @@ $(function () {
 
 		$results.html('<span class="fa fa-spinner fa-spin"></span> Loading...');
 		$.ajax({
-			url: 'http://localhost:3000/get/'+ owner +'/'+ repo,
+			url: 'https://pure-river-3595.herokuapp.com/get/'+ owner +'/'+ repo,
 			dataType: 'json',
 			success: function (data) {
 
